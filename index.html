@@ -67,7 +67,6 @@
                     stop_location: document.getElementById('stop_location').value.trim()
                 };
 
-                // Simple validation
                 if (!data.gross || !data.cargo_comment || !data.start_mileage || !data.pick_up_date || !data.pick_up_location || !data.stop_location) {
                     isValid = false;
                     alert('Please fill in all fields.');
@@ -81,7 +80,6 @@
                     delivery_date: document.getElementById('delivery_date').value.trim()
                 };
 
-                // Simple validation
                 if (!data.end_mileage || !data.price_per_gallon || !data.gallons_used || !data.delivery_date) {
                     isValid = false;
                     alert('Please fill in all fields.');
