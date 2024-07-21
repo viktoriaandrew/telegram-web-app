@@ -2,62 +2,122 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
     <meta name="format-detection" content="telephone=no" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="MobileOptimized" content="176" />
     <meta name="HandheldFriendly" content="True" />
-    <meta name="robots" content="noindex,nofollow" />
+    <title>Telegram Web App</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f9f9f9;
+            color: #333;
+            padding: 20px;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: #fff;
+            padding: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            border-radius: 8px;
+        }
+        .container h1 {
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+        input[type="text"], input[type="number"], input[type="date"] {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            background-color: #007bff;
+            color: #fff;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        button:disabled {
+            background-color: #ccc;
+        }
+    </style>
     <script src="https://tg.dev/js/telegram-web-app.js?1"></script>
     <script>
         Telegram.WebApp.ready();
 
-        function sendMessage() {
-            let message = document.getElementById('message').value;
-            Telegram.WebApp.sendData(message);
+        function sendData(action) {
+            let data = {};
+            if (action === 'new_trip') {
+                data = {
+                    action: 'new_trip',
+                    gross: document.getElementById('gross').value,
+                    cargo_comment: document.getElementById('cargo_comment').value,
+                    start_mileage: document.getElementById('start_mileage').value,
+                    pick_up_date: document.getElementById('pick_up_date').value,
+                    pick_up_location: document.getElementById('pick_up_location').value,
+                    stop_location: document.getElementById('stop_location').value
+                };
+            } else if (action === 'end_trip') {
+                data = {
+                    action: 'end_trip',
+                    end_mileage: document.getElementById('end_mileage').value,
+                    price_per_gallon: document.getElementById('price_per_gallon').value,
+                    gallons_used: document.getElementById('gallons_used').value,
+                    delivery_date: document.getElementById('delivery_date').value
+                };
+            }
+            Telegram.WebApp.sendData(JSON.stringify(data));
+        }
+
+        function showSection(sectionId) {
+            document.querySelectorAll('.section').forEach(section => section.style.display = 'none');
+            document.getElementById(sectionId).style.display = 'block';
         }
 
         window.onload = function() {
-            document.getElementById('sendButton').onclick = sendMessage;
+            document.getElementById('newTripButton').onclick = () => showSection('newTripSection');
+            document.getElementById('endTripButton').onclick = () => showSection('endTripSection');
+            document.getElementById('statsButton').onclick = () => showSection('statsSection');
         };
     </script>
-    <title>Telegram Web App</title>
-    <style>
-        body {
-            --bg-color: var(--tg-theme-bg-color, #fff);
-            font-family: sans-serif;
-            background-color: var(--bg-color);
-            color: var(--tg-theme-text-color, #222);
-            font-size: 14px;
-            margin: 0;
-            padding: 0;
-            color-scheme: var(--tg-color-scheme);
-        }
-        .container {
-            padding: 15px;
-            text-align: center;
-        }
-        input[type="text"] {
-            width: 100%;
-            padding: 12px 20px;
-            margin: 15px 0;
-            box-sizing: border-box;
-        }
-        button {
-            padding: 10px 20px;
-            background-color: var(--tg-theme-button-color, #50a8eb);
-            color: var(--tg-theme-button-text-color, #fff);
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-        }
-    </style>
 </head>
 <body>
     <div class="container">
         <h1>Telegram Web App</h1>
-        <input type="text" id="message" placeholder="Enter your message">
-        <button id="sendButton">Send to Bot</button>
+        <button id="newTripButton">Start New Trip</button>
+        <button id="endTripButton">End Trip</button>
+        <button id="statsButton">Trip Statistics</button>
+
+        <div id="newTripSection" class="section" style="display:none;">
+            <h2>Start New Trip</h2>
+            <input type="text" id="gross" placeholder="Gross, $" />
+            <input type="text" id="cargo_comment" placeholder="Cargo Comment" />
+            <input type="text" id="start_mileage" placeholder="Start Mileage" />
+            <input type="date" id="pick_up_date" placeholder="Pick Up Date" />
+            <input type="text" id="pick_up_location" placeholder="Pick Up Location" />
+            <input type="text" id="stop_location" placeholder="Stop Location" />
+            <button onclick="sendData('new_trip')">Submit</button>
+        </div>
+
+        <div id="endTripSection" class="section" style="display:none;">
+            <h2>End Trip</h2>
+            <input type="text" id="end_mileage" placeholder="End Mileage" />
+            <input type="text" id="price_per_gallon" placeholder="Price Per Gallon, $" />
+            <input type="text" id="gallons_used" placeholder="Gallons Used" />
+            <input type="date" id="delivery_date" placeholder="Delivery Date" />
+            <button onclick="sendData('end_trip')">Submit</button>
+        </div>
+
+        <div id="statsSection" class="section" style="display:none;">
+            <h2>Trip Statistics</h2>
+            <!-- Statistics content here -->
+        </div>
     </div>
 </body>
 </html>
