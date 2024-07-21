@@ -5,8 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
     <meta name="format-detection" content="telephone=no" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="MobileOptimized" content="176" />
-    <meta name="HandheldFriendly" content="True" />
     <title>Telegram Web App</title>
     <style>
         body {
@@ -46,8 +44,11 @@
         button:disabled {
             background-color: #ccc;
         }
+        .section {
+            display: none;
+        }
     </style>
-    <script src="https://tg.dev/js/telegram-web-app.js?1"></script>
+    <script src="https://telegram.org/js/telegram-web-app.js?1"></script>
     <script>
         Telegram.WebApp.ready();
 
@@ -84,6 +85,8 @@
             document.getElementById('newTripButton').onclick = () => showSection('newTripSection');
             document.getElementById('endTripButton').onclick = () => showSection('endTripSection');
             document.getElementById('statsButton').onclick = () => showSection('statsSection');
+            document.getElementById('submitNewTrip').onclick = () => sendData('new_trip');
+            document.getElementById('submitEndTrip').onclick = () => sendData('end_trip');
         };
     </script>
 </head>
@@ -94,27 +97,27 @@
         <button id="endTripButton">End Trip</button>
         <button id="statsButton">Trip Statistics</button>
 
-        <div id="newTripSection" class="section" style="display:none;">
+        <div id="newTripSection" class="section">
             <h2>Start New Trip</h2>
             <input type="text" id="gross" placeholder="Gross, $" />
             <input type="text" id="cargo_comment" placeholder="Cargo Comment" />
             <input type="text" id="start_mileage" placeholder="Start Mileage" />
-            <input type="date" id="pick_up_date" placeholder="Pick Up Date" />
+            <input type="date" id="pick_up_date" />
             <input type="text" id="pick_up_location" placeholder="Pick Up Location" />
             <input type="text" id="stop_location" placeholder="Stop Location" />
-            <button onclick="sendData('new_trip')">Submit</button>
+            <button id="submitNewTrip">Submit</button>
         </div>
 
-        <div id="endTripSection" class="section" style="display:none;">
+        <div id="endTripSection" class="section">
             <h2>End Trip</h2>
             <input type="text" id="end_mileage" placeholder="End Mileage" />
             <input type="text" id="price_per_gallon" placeholder="Price Per Gallon, $" />
             <input type="text" id="gallons_used" placeholder="Gallons Used" />
-            <input type="date" id="delivery_date" placeholder="Delivery Date" />
-            <button onclick="sendData('end_trip')">Submit</button>
+            <input type="date" id="delivery_date" />
+            <button id="submitEndTrip">Submit</button>
         </div>
 
-        <div id="statsSection" class="section" style="display:none;">
+        <div id="statsSection" class="section">
             <h2>Trip Statistics</h2>
             <!-- Statistics content here -->
         </div>
