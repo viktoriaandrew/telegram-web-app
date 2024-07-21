@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
     <meta name="format-detection" content="telephone=no" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <title>123123</title>
+    <title>Telegram Web App</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -52,29 +52,46 @@
     <script>
         Telegram.WebApp.ready();
 
-        function sendData(action) {
+        function validateAndSendData(action) {
             let data = {};
+            let isValid = true;
+
             if (action === 'new_trip') {
                 data = {
                     action: 'new_trip',
-                    gross: document.getElementById('gross').value,
-                    cargo_comment: document.getElementById('cargo_comment').value,
-                    start_mileage: document.getElementById('start_mileage').value,
-                    pick_up_date: document.getElementById('pick_up_date').value,
-                    pick_up_location: document.getElementById('pick_up_location').value,
-                    stop_location: document.getElementById('stop_location').value
+                    gross: document.getElementById('gross').value.trim(),
+                    cargo_comment: document.getElementById('cargo_comment').value.trim(),
+                    start_mileage: document.getElementById('start_mileage').value.trim(),
+                    pick_up_date: document.getElementById('pick_up_date').value.trim(),
+                    pick_up_location: document.getElementById('pick_up_location').value.trim(),
+                    stop_location: document.getElementById('stop_location').value.trim()
                 };
+
+                // Simple validation
+                if (!data.gross || !data.cargo_comment || !data.start_mileage || !data.pick_up_date || !data.pick_up_location || !data.stop_location) {
+                    isValid = false;
+                    alert('Please fill in all fields.');
+                }
             } else if (action === 'end_trip') {
                 data = {
                     action: 'end_trip',
-                    end_mileage: document.getElementById('end_mileage').value,
-                    price_per_gallon: document.getElementById('price_per_gallon').value,
-                    gallons_used: document.getElementById('gallons_used').value,
-                    delivery_date: document.getElementById('delivery_date').value
+                    end_mileage: document.getElementById('end_mileage').value.trim(),
+                    price_per_gallon: document.getElementById('price_per_gallon').value.trim(),
+                    gallons_used: document.getElementById('gallons_used').value.trim(),
+                    delivery_date: document.getElementById('delivery_date').value.trim()
                 };
+
+                // Simple validation
+                if (!data.end_mileage || !data.price_per_gallon || !data.gallons_used || !data.delivery_date) {
+                    isValid = false;
+                    alert('Please fill in all fields.');
+                }
             }
-            console.log('Sending data:', data);
-            Telegram.WebApp.sendData(JSON.stringify(data));
+
+            if (isValid) {
+                console.log('Sending data:', data);
+                Telegram.WebApp.sendData(JSON.stringify(data));
+            }
         }
 
         function showSection(sectionId) {
@@ -86,8 +103,8 @@
             document.getElementById('newTripButton').onclick = () => showSection('newTripSection');
             document.getElementById('endTripButton').onclick = () => showSection('endTripSection');
             document.getElementById('statsButton').onclick = () => showSection('statsSection');
-            document.getElementById('submitNewTrip').onclick = () => sendData('new_trip');
-            document.getElementById('submitEndTrip').onclick = () => sendData('end_trip');
+            document.getElementById('submitNewTrip').onclick = () => validateAndSendData('new_trip');
+            document.getElementById('submitEndTrip').onclick = () => validateAndSendData('end_trip');
         };
     </script>
 </head>
